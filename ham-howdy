@@ -3,18 +3,22 @@
 initialize ()
 {
 	if [ ! -f last_packages ]; then
-		touch last_packages
+		touch last
 	fi
 }
 
 get_available_packages ()
 {
-	dpkg-query --showformat '${Package}\n' -W | sort
+	dpkg-query --showformat '${Package}\n' -W | sort > available
 }
 
+compute_new_packages ()
+{
+	comm available last -3 > new
+}
 
 # Main program
 initialize
 get_available_packages
-
+compute_new_packages
 
