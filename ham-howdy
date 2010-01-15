@@ -27,12 +27,20 @@ create_rss_header ()
 
 initialize ()
 {
-	if [ ! -f last_packages ]; then
-		touch last
+	if [ ! -f last ]; then
+		dpkg-query --showformat '${Package}\n' -W | sort > last	
 	fi
 
 	if [ ! -f header ]; then
 		create_rss_header
+	fi
+
+	if [ ! -f package_feeds ]; then
+		touch package_feeds;
+	fi
+
+	if [ ! -f new_packages.xml ]; then
+		create_rss
 	fi
 }
 
@@ -49,11 +57,13 @@ compute_new_packages ()
 save_new_packages ()
 {
 	cat new >> last
-	rm new
+	cat last | sort > last.tmp
+	mv last.tmp last
 }
 
 finalize ()
 {
+	rm new
 	rm available
 }
 
@@ -81,6 +91,11 @@ create_rss ()
 initialize
 get_available_packages
 compute_new_packages
+
+if [ ! -s new ]; then
+	finalize
+	return 0
+fi
 
 while read PACKAGE ; do
 	package_to_feed ${PACKAGE}
