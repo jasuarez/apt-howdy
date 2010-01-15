@@ -81,9 +81,11 @@ create_rss ()
 initialize
 get_available_packages
 compute_new_packages
-package_to_feed bzip2
-package_to_feed unzip
-package_to_feed liferea
+
+while read PACKAGE ; do
+	package_to_feed ${PACKAGE}
+done < new
+
 save_new_packages
 create_rss
 finalize
