@@ -23,8 +23,14 @@ save_new_packages ()
 	rm new
 }
 
+finalize ()
+{
+	rm available
+}
+
 # Main program
 initialize
 get_available_packages
 compute_new_packages
 save_new_packages
+finalize
