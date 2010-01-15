@@ -17,8 +17,14 @@ compute_new_packages ()
 	comm available last -3 > new
 }
 
+save_new_packages ()
+{
+	cat new >> last
+	rm new
+}
+
 # Main program
 initialize
 get_available_packages
 compute_new_packages
-
+save_new_packages
