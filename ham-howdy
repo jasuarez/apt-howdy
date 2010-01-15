@@ -1,0 +1,12 @@
+#!/bin/sh
+
+get_available_packages ()
+{
+	dpkg-query --showformat '${Package}\n' -W | sort
+}
+
+
+# Main program
+get_available_packages
+
+
