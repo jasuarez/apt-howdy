@@ -1,9 +1,38 @@
 #!/bin/sh
 
+text_to_html ()
+{
+	LEAD="s/^[ \t]*//"
+
+	QUOT="s/\"/\&quot;/"
+	AMP="s/&/\&amp;/"
+	LT="s/</\&lt;/"
+	GT="s/>/\&gt;/"
+	CIRC="s/\^/\&circ;/"
+	TILDE="s/~/\&tilde;/"
+	EURO="s/€/\&euro;/"
+
+	BLINE="s/^\.$/\&lt;\/p\&gt;/"
+
+	echo -n "$1" | sed -e "${LEAD};${QUOT};${AMP};${LT};${GT};${CIRC};${TILDE};${EURO};${BLINE}"
+}
+
+create_rss_header ()
+{
+	printf "<title>%s</title>\n<link>%s</link>\n<description>%s</description>\n" \
+		"New available packages"				\
+		"http://igalia.com"					\
+		"The list of new available packages after update" >> header
+}
+
 initialize ()
 {
 	if [ ! -f last_packages ]; then
 		touch last
+	fi
+
+	if [ ! -f header ]; then
+		create_rss_header
 	fi
 }
 
@@ -28,9 +57,33 @@ finalize ()
 	rm available
 }
 
+package_to_feed ()
+{
+	if [ -z $1 ]; then
+		return;
+	fi
+
+	TITLE=$(dpkg-query -f '${Package}' -W $1)
+	DESC=$(dpkg-query -f '${Description}' -W $1)
+	DESC_HTML=$(text_to_html "${DESC}")
+	echo "<item><title>${TITLE}</title><description>${DESC_HTML}</description><pubDate>$(date)</pubDate></item>\n" >> package_feeds
+}
+
+create_rss ()
+{
+	printf "<?xml version=\"1.0\"?>\n<rss version=\"2.0\">\n<channel>\n" > new_packages.xml
+	cat header >> new_packages.xml
+	cat package_feeds >> new_packages.xml
+	printf  "</channel>\n</rss>\n" >> new_packages.xml
+}
+
 # Main program
 initialize
 get_available_packages
 compute_new_packages
+package_to_feed bzip2
+package_to_feed unzip
+package_to_feed liferea
 save_new_packages
+create_rss
 finalize
