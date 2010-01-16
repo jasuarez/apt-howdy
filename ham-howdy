@@ -2,19 +2,20 @@
 
 text_to_html ()
 {
-	LEAD="s/^[ \t]*//"
+	SHORT="s/^\([^ ].*\)$/<p><b>\1<\/b><\/p><p>/"
+	PAR="s/^ \.$/<\/p><p>/"
+	BREAK="s/^ /<br>/"
+	LEAD="s/^ //"
 
-	QUOT="s/\"/\&quot;/"
-	AMP="s/&/\&amp;/"
-	LT="s/</\&lt;/"
-	GT="s/>/\&gt;/"
-	CIRC="s/\^/\&circ;/"
-	TILDE="s/~/\&tilde;/"
-	EURO="s/€/\&euro;/"
+	QUOT="s/\"/\&quot;/g"
+	AMP="s/&/\&amp;/g"
+	LT="s/</\&lt;/g"
+	GT="s/>/\&gt;/g"
+	CIRC="s/\^/\&circ;/g"
+	TILDE="s/~/\&tilde;/g"
+	EURO="s/€/\&euro;/g"
 
-	BLINE="s/^\.$/\&lt;\/p\&gt;/"
-
-	echo -n "$1" | sed -e "${LEAD};${QUOT};${AMP};${LT};${GT};${CIRC};${TILDE};${EURO};${BLINE}"
+	echo -n "$1</p>" | sed -e "${SHORT};${PAR};${LEAD};${BREAK};${QUOT};${AMP};${LT};${GT};${CIRC};${TILDE};${EURO}"
 }
 
 create_rss_header ()
@@ -75,7 +76,10 @@ package_to_feed ()
 
 	TITLE=$(dpkg-query -f '${Package}' -W $1)
 	DESC=$(dpkg-query -f '${Description}' -W $1)
-	DESC_HTML=$(text_to_html "${DESC}")
+	DESC1=$(echo -n "${DESC}" | head -n 1)
+	DESC2=$(echo -n "${DESC}" | tail -n +2)
+	#DESC_HTML=$(text_to_html "<b>${DESC1}</b></p>${DESC2}")
+	DESC_HTML=$(text_to_html "$DESC")
 	echo "<item><title>${TITLE}</title><description>${DESC_HTML}</description><pubDate>$(date)</pubDate></item>\n" >> package_feeds
 }
 
