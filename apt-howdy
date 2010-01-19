@@ -18,6 +18,16 @@
 # along with apt-howdy. If not, see <http://www.gnu.org/licenses/>.
 #
 
+BASEDIR=/var/lib/apt-howdy
+RSSFILE=${BASEDIR}/new_packages.xml
+
+CACHEDIR=${BASEDIR}/cache
+RSSHEADER=${CACHEDIR}/rss-header
+FEEDS=${CACHEDIR}/package-feeds
+OLDLIST=${CACHEDIR}/package-old-list
+NEWLIST=${CACHEDIR}/package-new-list
+NEWPACKAGES=${CACHEDIR}/package-news
+
 text_to_html ()
 {
 	SHORT="s/^\([^ ].*\)$/<p><b>\1<\/b><\/p><p>/"
@@ -41,49 +51,57 @@ create_rss_header ()
 	printf "<title>%s</title>\n<link>%s</link>\n<description>%s</description>\n" \
 		"New available packages"				\
 		"http://igalia.com"					\
-		"The list of new available packages after update" >> header
+		"The list of new available packages after update" >> ${RSSHEADER}
 }
 
 initialize ()
 {
-	if [ ! -f last ]; then
-		dpkg-query --showformat '${Package}\n' -W | sort > last	
+        if [ ! -d ${BASEDIR} ]; then
+                mkdir -p ${BASEDIR}
+        fi
+
+        if [ ! -d ${CACHEDIR} ]; then
+                mkdir -p ${CACHEDIR}
+        fi
+
+	if [ ! -f ${OLDLIST} ]; then
+		dpkg-query --showformat '${Package}\n' -W | sort > ${OLDLIST}	
 	fi
 
-	if [ ! -f header ]; then
+	if [ ! -f ${RSSHEADER} ]; then
 		create_rss_header
 	fi
 
-	if [ ! -f package_feeds ]; then
-		touch package_feeds;
+	if [ ! -f ${FEEDS} ]; then
+		touch ${FEEDS};
 	fi
 
-	if [ ! -f new_packages.xml ]; then
+	if [ ! -f ${RSSFILE} ]; then
 		create_rss
 	fi
 }
 
 get_available_packages ()
 {
-	dpkg-query --showformat '${Package}\n' -W | sort > available
+	dpkg-query --showformat '${Package}\n' -W | sort > ${NEWLIST}
 }
 
 compute_new_packages ()
 {
-	comm available last -3 > new
+	comm ${NEWLIST} ${OLDLIST} -3 > ${NEWPACKAGES}
 }
 
 save_new_packages ()
 {
-	cat new >> last
-	cat last | sort > last.tmp
-	mv last.tmp last
+	cat ${NEWPACKAGES} >> ${OLDLIST}
+	cat ${OLDLIST} | sort > ${OLDLIST}.tmp
+	mv ${OLDLIST}.tmp ${OLDLIST}
 }
 
 finalize ()
 {
-	rm new
-	rm available
+	rm ${NEWPACKAGES}
+	rm ${NEWLIST}
 }
 
 package_to_feed ()
@@ -98,15 +116,15 @@ package_to_feed ()
 	DESC2=$(echo -n "${DESC}" | tail -n +2)
 	#DESC_HTML=$(text_to_html "<b>${DESC1}</b></p>${DESC2}")
 	DESC_HTML=$(text_to_html "$DESC")
-	echo "<item><title>${TITLE}</title><description>${DESC_HTML}</description><pubDate>$(date)</pubDate></item>\n" >> package_feeds
+	echo "<item><title>${TITLE}</title><description>${DESC_HTML}</description><pubDate>$(date)</pubDate></item>\n" >> ${FEEDS}
 }
 
 create_rss ()
 {
-	printf "<?xml version=\"1.0\"?>\n<rss version=\"2.0\">\n<channel>\n" > new_packages.xml
-	cat header >> new_packages.xml
-	cat package_feeds >> new_packages.xml
-	printf  "</channel>\n</rss>\n" >> new_packages.xml
+	printf "<?xml version=\"1.0\"?>\n<rss version=\"2.0\">\n<channel>\n" > ${RSSFILE}
+	cat ${RSSHEADER} >> ${RSSFILE}
+	cat ${FEEDS} >> ${RSSFILE}
+	printf  "</channel>\n</rss>\n" >> ${RSSFILE}
 }
 
 # Main program
@@ -114,14 +132,14 @@ initialize
 get_available_packages
 compute_new_packages
 
-if [ ! -s new ]; then
+if [ ! -s ${NEWPACKAGES} ]; then
 	finalize
 	return 0
 fi
 
 while read PACKAGE ; do
 	package_to_feed ${PACKAGE}
-done < new
+done < ${NEWPACKAGES}
 
 save_new_packages
 create_rss
