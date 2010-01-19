@@ -3,6 +3,8 @@ APT-CONF	= $(DESTDIR)/etc/apt/apt.conf.d
 
 all:
 
+clean:
+
 install:
 	install -d $(LIB-BIN) $(APT-CONF)
 	install apt-howdy $(LIB-BIN)
