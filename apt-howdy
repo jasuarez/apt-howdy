@@ -18,16 +18,17 @@
 # along with apt-howdy. If not, see <http://www.gnu.org/licenses/>.
 #
 
-BASEDIR=/var/lib/apt-howdy
-RSSFILE=${BASEDIR}/new_packages.xml
+BASEDIR=/var/lib/apt-howdy		# Place where to put RSS page
+RSSFILE=${BASEDIR}/new_packages.xml	# RSS page to use
 
-CACHEDIR=${BASEDIR}/cache
-RSSHEADER=${CACHEDIR}/rss-header
-FEEDS=${CACHEDIR}/package-feeds
-OLDLIST=${CACHEDIR}/package-old-list
-NEWLIST=${CACHEDIR}/package-new-list
-NEWPACKAGES=${CACHEDIR}/package-news
+CACHEDIR=${BASEDIR}/cache		# Place to put internal files
+RSSHEADER=${CACHEDIR}/rss-header	# Header of RSS page
+FEEDS=${CACHEDIR}/package-feeds		# Feeds for new packages
+OLDLIST=${CACHEDIR}/package-old-list	# List with last-time checked files
+NEWLIST=${CACHEDIR}/package-new-list	# List with packages after updating
+NEWPACKAGES=${CACHEDIR}/package-news	# List with new packages available
 
+# Formats package description ($1) as escaped HTML
 text_to_html ()
 {
 	SHORT="s/^\([^ ].*\)$/<p><b>\1<\/b><\/p><p>/"
@@ -46,6 +47,7 @@ text_to_html ()
 	echo -n "$1</p>" | sed -e "${SHORT};${PAR};${LEAD};${BREAK};${QUOT};${AMP};${LT};${GT};${CIRC};${TILDE};${EURO}"
 }
 
+# Creates header of RSS page
 create_rss_header ()
 {
 	printf "<title>%s</title>\n<link>%s</link>\n<description>%s</description>\n" \
@@ -54,6 +56,7 @@ create_rss_header ()
 		"The list of new available packages after update" >> ${RSSHEADER}
 }
 
+# Creates all required files
 initialize ()
 {
         if [ ! -d ${BASEDIR} ]; then
@@ -81,16 +84,21 @@ initialize ()
 	fi
 }
 
+# Get a list of available packages in repositories
 get_available_packages ()
 {
 	dpkg-query --showformat '${Package}\n' -W | sort > ${NEWLIST}
 }
 
+# Get a list of new packages available in repositories that were not available
+# before
 compute_new_packages ()
 {
 	comm ${NEWLIST} ${OLDLIST} -3 > ${NEWPACKAGES}
 }
 
+# Save the list of new packages, so they will not be notified any more in
+# future
 save_new_packages ()
 {
 	cat ${NEWPACKAGES} >> ${OLDLIST}
@@ -98,12 +106,14 @@ save_new_packages ()
 	mv ${OLDLIST}.tmp ${OLDLIST}
 }
 
+# Cleans up any unneeded file
 finalize ()
 {
 	rm ${NEWPACKAGES}
 	rm ${NEWLIST}
 }
 
+# Given a package ($1) it creates a feed to notify its availability
 package_to_feed ()
 {
 	if [ -z $1 ]; then
@@ -119,6 +129,7 @@ package_to_feed ()
 	echo "<item><title>${TITLE}</title><description>${DESC_HTML}</description><pubDate>$(date)</pubDate></item>\n" >> ${FEEDS}
 }
 
+# Creates (or re-creates) the RSS page
 create_rss ()
 {
 	printf "<?xml version=\"1.0\"?>\n<rss version=\"2.0\">\n<channel>\n" > ${RSSFILE}
@@ -132,6 +143,7 @@ initialize
 get_available_packages
 compute_new_packages
 
+# No new packages
 if [ ! -s ${NEWPACKAGES} ]; then
 	finalize
 	return 0
@@ -144,3 +156,4 @@ done < ${NEWPACKAGES}
 save_new_packages
 create_rss
 finalize
+
