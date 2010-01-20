@@ -19,7 +19,7 @@
 #
 
 BASEDIR=/var/lib/apt-howdy		# Place where to put RSS page
-RSSFILE=${BASEDIR}/new_packages.xml	# RSS page to use
+RSSFILE=${BASEDIR}/new-packages.xml	# RSS page to use
 
 CACHEDIR=${BASEDIR}/cache		# Place to put internal files
 RSSHEADER=${CACHEDIR}/rss-header	# Header of RSS page
