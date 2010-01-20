@@ -87,7 +87,7 @@ initialize ()
 # Get a list of available packages in repositories
 get_available_packages ()
 {
-	dpkg-query --showformat '${Package}\n' -W | sort > ${NEWLIST}
+	apt-cache dumpavail | grep ^Package | cut-c10- | sort > ${NEWLIST}
 }
 
 # Get a list of new packages available in repositories that were not available
