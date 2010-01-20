@@ -68,7 +68,7 @@ initialize ()
         fi
 
 	if [ ! -f ${OLDLIST} ]; then
-		apt-cache dumpavail | grep ^Package | cut -c10- | sort > ${OLDLIST}
+		apt-cache pkgnames | sort > ${OLDLIST}
 	fi
 
 	if [ ! -f ${RSSHEADER} ]; then
@@ -87,7 +87,7 @@ initialize ()
 # Get a list of available packages in repositories
 get_available_packages ()
 {
-	apt-cache dumpavail | grep ^Package | cut -c10- | sort > ${NEWLIST}
+	apt-cache pkgnames | sort > ${NEWLIST}
 }
 
 # Get a list of new packages available in repositories that were not available
