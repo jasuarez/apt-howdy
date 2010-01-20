@@ -43,7 +43,6 @@ clean:
 install: build
 	dh_testdir
 	dh_testroot
-	dh_prep  
 	dh_installdirs
 
 	# Add here commands to install the package into debian/apt-howdy.
