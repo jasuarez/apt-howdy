@@ -31,7 +31,7 @@ NEWPACKAGES=${CACHEDIR}/package-news	# List with new packages available
 # Formats package description ($1) as escaped HTML
 text_to_html ()
 {
-	SHORT="s/^\([^ ].*\)$/<p><b>\1<\/b><\/p><p>/"
+	SHORT="s/^Description: \([^ ].*\)$/<p><b>\1<\/b><\/p><p>/"
 	PAR="s/^ \.$/<\/p><p>/"
 	BREAK="s/^ /<br>/"
 	LEAD="s/^ //"
@@ -120,11 +120,8 @@ package_to_feed ()
 		return;
 	fi
 
-	TITLE=$(dpkg-query -f '${Package}' -W $1)
-	DESC=$(dpkg-query -f '${Description}' -W $1)
-	DESC1=$(echo -n "${DESC}" | head -n 1)
-	DESC2=$(echo -n "${DESC}" | tail -n +2)
-	#DESC_HTML=$(text_to_html "<b>${DESC1}</b></p>${DESC2}")
+	TITLE=$(apt-cache --no-all-versions show $1 | grep ^Package | cut -c10-)
+	DESC=$(apt-cache --no-all-versions show $1 | grep -E "(^Description:|^[ ])")
 	DESC_HTML=$(text_to_html "$DESC")
 	echo "<item><title>${TITLE}</title><description>${DESC_HTML}</description><pubDate>$(date)</pubDate></item>\n" >> ${FEEDS}
 }
