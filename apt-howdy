@@ -68,7 +68,7 @@ initialize ()
         fi
 
 	if [ ! -f ${OLDLIST} ]; then
-		dpkg-query --showformat '${Package}\n' -W | sort > ${OLDLIST}	
+		apt-cache dumpavail | grep ^Package | cut-c10- | sort > ${OLDLIST}
 	fi
 
 	if [ ! -f ${RSSHEADER} ]; then
