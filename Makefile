@@ -1,16 +1,15 @@
 LIB-BIN		= $(DESTDIR)/usr/lib
-APT-CONF	= $(DESTDIR)/etc/apt/apt.conf.d
 
 all:
 
 clean:
 
 install:
-	install -d $(LIB-BIN) $(APT-CONF)
+	install -d $(LIB-BIN)
 	install apt-howdy $(LIB-BIN)
-	install -m644 apt-howdy-hook $(APT-CONF)/20apt-howdy
+	install apt-howdy-check $(LIB-BIN)
 
 uninstall:
-	-rm -f $(APT-CONF)/20apt-howdy
 	-rm -f $(LIB-BIN)/apt-howdy
+	-rm -f $(LIB-BIN)/apt-howdy-check
 
