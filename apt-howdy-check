@@ -1,0 +1,37 @@
+#!/bin/sh
+#
+# apt-howdy -- Check for new available packages
+#
+# Copyright (C) 2010 Igalia, S.L.
+# Authors: Juan A. Suarez Romero <jasuarez@igalia.com>
+#
+# apt-howdy is free software: you can redistribute it and/or modify it
+# under the terms of the GNU General Public License version 2 as
+# published by the Free Software Foundation.
+#
+# apt-howdy is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+# See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with apt-howdy. If not, see <http://www.gnu.org/licenses/>.
+#
+
+BASEDIR=/var/lib/apt-howdy		# Place where to put RSS page
+CACHEDIR=${BASEDIR}/cache		# Place to put internal files
+
+LASTUPDATE=${CACHEDIR}/last-apt-update	# Contains last time apt was updated
+
+if [ ! -f ${LASTUPATE} ]; then
+	touch ${LASTUPDATE}
+fi
+
+LAST=$(<${LASTUPDATE})
+NEW=$(ls -lde /var/lib/apt/lists | cut -c44-67)
+
+if [ "x${LAST}" != "x${NEW}" ]; then
+	/usr/lib/apt-howdy
+	echo "${NEW}" > ${LASTUPDATE}
+fi
+
