@@ -94,7 +94,7 @@ get_available_packages ()
 # before
 compute_new_packages ()
 {
-	comm ${NEWLIST} ${OLDLIST} -3 > ${NEWPACKAGES}
+	awk 'FNR==NR{tab[$0]++} FNR!=NR && !tab[$0]' ${OLDLIST} ${NEWLIST} > ${NEWPACKAGES}
 }
 
 # Save the list of new packages, so they will not be notified any more in
