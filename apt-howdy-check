@@ -26,6 +26,9 @@ ALARMID=${CACHEDIR}/alarm-id
 
 INTERVAL=120				# Run check every INTERVAL minutes
 
+APTHOWDY=/usr/lib/apt-howdy		# Apt-howdy full path
+APTHOWDYCHECK=/usr/lib/apt-howdy-check	# Apt-howdy-check full path
+
 if [ ! -d ${CACHEDIR} ]; then
 	mkdir -p ${CACHEDIR}
 fi
@@ -40,8 +43,8 @@ if [ "x$1" == "xunregister" ]; then
 fi
 
 if [ "x$1" == "xregister" ]; then
-	/usr/lib/apt-howdy-check unregister
-	run-standalone.sh dbus-send --session --dest=com.nokia.alarmd --type=method_call --print-reply /com/nokia/alarmd com.nokia.alarmd.add_event objpath:/AlarmdEventRecurring uint32:4 string:action objpath:/AlarmdActionExec uint32:2 string:path string:"/usr/lib/apt-howdy" string:flags int32:17 string:recurr_interval uint32:${INTERVAL} string:recurr_count int32:-1 string:time uint64:$((`date +%s`+10)) | grep int32 | awk '{ print $2 }' > ${ALARMID}
+	${APTHOWDYCHECK} unregister
+	run-standalone.sh dbus-send --session --dest=com.nokia.alarmd --type=method_call --print-reply /com/nokia/alarmd com.nokia.alarmd.add_event objpath:/AlarmdEventRecurring uint32:4 string:action objpath:/AlarmdActionExec uint32:2 string:path string:"${APTHOWDYCHECK}" string:flags int32:17 string:recurr_interval uint32:${INTERVAL} string:recurr_count int32:-1 string:time uint64:$((`date +%s`+10)) | grep int32 | awk '{ print $2 }' > ${ALARMID}
 	return 0
 fi
 
@@ -53,7 +56,7 @@ LAST=$(<${LASTUPDATE})
 NEW=$(ls -lde /var/lib/apt/lists | cut -c44-67)
 
 if [ "x${LAST}" != "x${NEW}" ]; then
-	/usr/lib/apt-howdy
+	${APTHOWDY}
 	echo "${NEW}" > ${LASTUPDATE}
 fi
 
