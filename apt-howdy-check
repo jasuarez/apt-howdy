@@ -24,6 +24,8 @@ CACHEDIR=${BASEDIR}/cache		# Place to put internal files
 LASTUPDATE=${CACHEDIR}/last-apt-update	# Contains last time apt was updated
 ALARMID=${CACHEDIR}/alarm-id
 
+INTERVAL=120				# Run check every INTERVAL minutes
+
 if [ ! -d ${CACHEDIR} ]; then
 	mkdir -p ${CACHEDIR}
 fi
