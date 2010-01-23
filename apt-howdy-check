@@ -22,6 +22,22 @@ BASEDIR=/var/lib/apt-howdy		# Place where to put RSS page
 CACHEDIR=${BASEDIR}/cache		# Place to put internal files
 
 LASTUPDATE=${CACHEDIR}/last-apt-update	# Contains last time apt was updated
+ALARMID=${CACHEDIR}/alarm-id
+
+if [ "x$1" == "xunregister" ]; then
+	if [ -f ${ALARMID} ]; then
+		ID=$(<${ALARMID})
+		run-standalone dbus-send --session --dest=com.nokia.alarmd --type=method_call /com/nokia/alarmd com.nokia.alarmd.del_event int32:${ID}
+		rm ${ALARMID}
+	fi
+	return 0
+fi
+
+if [ "x$1" == "xregister" ]; then
+	/usr/lib/apt-howdy unregister
+	run-standalone dbus-send --session --dest=com.nokia.alarmd --type=method_call --print-reply /com/nokia/alarmd com.nokia.alarmd.add_event objpath:/AlarmdEventRecurring uint32:4 string:action objpath:/AlarmdActionExec uint32:2 string:path string:"/usr/lib/apt-howdy-check" string:flags int32:17 string:recurr_interval uint32:120 string:recurr_count int32:-1 string:time uint64:$((`date +%s`+10)) | grep int32 | awk '{ print $2 }' > ${ALARMID}
+	return 0
+fi
 
 if [ ! -f ${LASTUPATE} ]; then
 	touch ${LASTUPDATE}
