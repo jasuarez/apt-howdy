@@ -7,7 +7,7 @@ Standards-Version: 3.7.2
 
 Package: apt-howdy
 Architecture: all
-Depends: ${misc:Depends}
+Depends: ${misc:Depends}, apt, coreutils, grep, sed
 Description: Notify new available packages
  apt-howdy is an utility that checks for new packages available in repositories
  and notifies them through RSS.
