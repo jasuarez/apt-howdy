@@ -5,9 +5,6 @@
 
 set -e
 
-# Run it for first time
-test -x /usr/lib/apt-howdy && /usr/lib/apt-howdy
-
 # Register check in alarm
 test -x /usr/lib/apt-howdy-check && /usr/lib/apt-howdy-check register
 
