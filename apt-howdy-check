@@ -24,7 +24,7 @@ CACHEDIR=${BASEDIR}/cache		# Place to put internal files
 LASTUPDATE=${CACHEDIR}/last-apt-update	# Contains last time apt was updated
 ALARMID=${CACHEDIR}/alarm-id
 
-INTERVAL=120				# Run check every INTERVAL minutes
+INTERVAL=60				# Run check every INTERVAL minutes
 
 APTHOWDY=/usr/lib/apt-howdy		# Apt-howdy full path
 APTHOWDYCHECK=/usr/lib/apt-howdy-check	# Apt-howdy-check full path
