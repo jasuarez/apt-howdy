@@ -44,7 +44,7 @@ fi
 
 if [ "x$1" == "xregister" ]; then
 	${APTHOWDYCHECK} unregister
-	run-standalone.sh dbus-send --session --dest=com.nokia.alarmd --type=method_call --print-reply /com/nokia/alarmd com.nokia.alarmd.add_event objpath:/AlarmdEventRecurring uint32:4 string:action objpath:/AlarmdActionExec uint32:2 string:path string:"${APTHOWDYCHECK}" string:flags int32:17 string:recurr_interval uint32:${INTERVAL} string:recurr_count int32:-1 string:time uint64:$((`date +%s`+10)) | grep int32 | awk '{ print $2 }' > ${ALARMID}
+	run-standalone.sh dbus-send --session --dest=com.nokia.alarmd --type=method_call --print-reply /com/nokia/alarmd com.nokia.alarmd.add_event objpath:/AlarmdEventRecurring uint32:4 string:action objpath:/AlarmdActionExec uint32:2 string:path string:"${APTHOWDYCHECK}" string:flags int32:17 string:recurr_interval uint32:${INTERVAL} string:recurr_count int32:-1 string:time uint64:$((`date +%s`+5)) | grep int32 | awk '{ print $2 }' > ${ALARMID}
 	return 0
 fi
 
