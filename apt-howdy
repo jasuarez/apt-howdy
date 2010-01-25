@@ -121,7 +121,7 @@ package_to_feed ()
 	fi
 
 	TITLE=$(apt-cache --no-all-versions show $1 | grep ^Package | cut -c10-)
-	DESC=$(apt-cache --no-all-versions show $1 | grep -E "(^Description:|^[ ])")
+	DESC=$(apt-cache --no-all-versions show $1 | awk  -F"\n" '/^Description/ { print $1 ; i=1 ; next } /^ / && i==1 { print $1 ; next } { i=0 }')
 	DESC_HTML=$(text_to_html "$DESC")
 	echo "<item><title>${TITLE}</title><description>${DESC_HTML}</description><pubDate>$(date)</pubDate></item>\n" >> ${FEEDS}
 }
