@@ -48,7 +48,7 @@ if [ "x$1" == "xregister" ]; then
 	return 0
 fi
 
-if [ ! -f ${LASTUPATE} ]; then
+if [ ! -f ${LASTUPDATE} ]; then
 	touch ${LASTUPDATE}
 fi
 
