@@ -125,8 +125,12 @@ package_to_feed ()
 		TITLE=$(apt-cache --no-all-versions show $1 | grep ^Package | cut -c10-)
 	fi
 	DESC=$(apt-cache --no-all-versions show $1 | awk  -F"$" '/^Description/ { print $1 ; i=1 ; next } /^ / && i==1 { print $1 ; next } { i=0 }')
+	ICON=$(apt-cache --no-all-versions show $1 | awk  -F"$" '/^Maemo-Icon-26/ { i=1 ; next } /^ / && i==1 { print $1 ; next } { i=0 }')
+	if [ "${ICON}" ]; then
+		ICON_HTML="&lt;img src=&quot;data:image/png;base64,${ICON}&quot; align=&quot;right&quot; style=&quot;float: right&quot; /&gt;"
+	fi
 	DESC_HTML=$(text_to_html "$DESC")
-	echo "<item><title>${TITLE}</title><description>${DESC_HTML}</description><pubDate>$(date)</pubDate></item>\n" >> ${FEEDS}
+	echo "<item><title>${TITLE}</title><description>${ICON_HTML} ${DESC_HTML}</description><pubDate>$(date)</pubDate></item>\n" >> ${FEEDS}
 }
 
 # Creates (or re-creates) the RSS page
