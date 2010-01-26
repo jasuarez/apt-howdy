@@ -120,7 +120,10 @@ package_to_feed ()
 		return;
 	fi
 
-	TITLE=$(apt-cache --no-all-versions show $1 | grep ^Package | cut -c10-)
+	TITLE=$(apt-cache --no-all-versions show $1 | grep ^Maemo-Display-Name | cut -c21-)
+	if [ -z "${TITLE}" ]; then
+		TITLE=$(apt-cache --no-all-versions show $1 | grep ^Package | cut -c10-)
+	fi
 	DESC=$(apt-cache --no-all-versions show $1 | awk  -F"$" '/^Description/ { print $1 ; i=1 ; next } /^ / && i==1 { print $1 ; next } { i=0 }')
 	DESC_HTML=$(text_to_html "$DESC")
 	echo "<item><title>${TITLE}</title><description>${DESC_HTML}</description><pubDate>$(date)</pubDate></item>\n" >> ${FEEDS}
