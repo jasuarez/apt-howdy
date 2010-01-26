@@ -135,6 +135,14 @@ create_rss ()
 	printf  "</channel>\n</rss>\n" >> ${RSSFILE}
 }
 
+# Checks if the package ($1) must be filtered. Only packages that belongs to
+# "user/*" category, except for "user/hidden", and do not have flag
+# "system-update" on will be notified
+filter ()
+{
+	apt-cache --no-all-versions show $1 | awk -F"(: |/)" '$1=="Section" && ($2!="user" || $3=="system") { print 1 ; nextfile } $1=="Maemo-Flags" && /system-update/ { print 1 ; nextfile }'
+}
+
 # Main program
 initialize
 get_available_packages
@@ -147,7 +155,9 @@ if [ ! -s ${NEWPACKAGES} ]; then
 fi
 
 while read PACKAGE ; do
-	package_to_feed ${PACKAGE}
+	if [ ! $(filter ${PACKACKE}) ]; then
+		package_to_feed ${PACKAGE}
+	fi
 done < ${NEWPACKAGES}
 
 save_new_packages
