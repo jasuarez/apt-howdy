@@ -128,6 +128,8 @@ package_to_feed ()
 	ICON=$(apt-cache --no-all-versions show $1 | awk  -F"$" '/^Maemo-Icon-26/ { i=1 ; next } /^ / && i==1 { print $1 ; next } { i=0 }')
 	if [ "${ICON}" ]; then
 		ICON_HTML="&lt;img src=&quot;data:image/png;base64,${ICON}&quot; align=&quot;right&quot; style=&quot;float: right&quot; /&gt;"
+	else
+		ICON_HTML=""
 	fi
 	DESC_HTML=$(text_to_html "$DESC")
 	echo "<item><title>${TITLE}</title><description>${ICON_HTML} ${DESC_HTML}</description><pubDate>$(date)</pubDate></item>\n" >> ${FEEDS}
