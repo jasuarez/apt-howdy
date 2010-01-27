@@ -162,7 +162,7 @@ if [ ! -s ${NEWPACKAGES} ]; then
 fi
 
 while read PACKAGE ; do
-	if [ ! $(filter ${PACKACKE}) ]; then
+	if [ ! $(filter ${PACKAGE}) ]; then
 		package_to_feed ${PACKAGE}
 	fi
 done < ${NEWPACKAGES}
