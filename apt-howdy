@@ -50,9 +50,9 @@ text_to_html ()
 # Creates header of RSS page
 create_rss_header ()
 {
-	printf "<title>%s</title>\n<link>%s</link>\n<description>%s</description>\n" \
-		"New available packages"				\
-		"http://igalia.com"					\
+	printf "<title>%s</title>\n<link>%s</link>\n<description>%s</description>\n"	\
+		"New available packages"						\
+		"http://gitorious.org/apt-howdy"					\
 		"The list of new available packages after update" >> ${RSSHEADER}
 }
 
