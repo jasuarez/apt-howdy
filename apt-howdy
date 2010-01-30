@@ -136,34 +136,34 @@ create_rss ()
 }
 
 # Main program
-[ "x$1" == "x-v" ] && echo "Initializing..."
+[ "x$1" = "x-v" ] && echo "Initializing..."
 initialize
 
-[ "x$1" == "x-v" ] && echo "Getting a list of available packages..."
+[ "x$1" = "x-v" ] && echo "Getting a list of available packages..."
 get_available_packages
 
-[ "x$1" == "x-v" ] && echo "Obtaining a list of new packages..."
+[ "x$1" = "x-v" ] && echo "Obtaining a list of new packages..."
 compute_new_packages
 
 # No new packages
 if [ ! -s ${NEWPACKAGES} ]; then
-	[ "x$1" == "x-v" ] && echo "There are no new packages"
-	[ "x$1" == "x-v" ] && echo "Finalizing..."
+	[ "x$1" = "x-v" ] && echo "There are no new packages"
+	[ "x$1" = "x-v" ] && echo "Finalizing..."
 	finalize
 	return 0
 fi
 
 while read PACKAGE ; do
-	[ "x$1" == "x-v" ] && echo "Generating feed for ${PACKAGE}..."
+	[ "x$1" = "x-v" ] && echo "Generating feed for ${PACKAGE}..."
 	package_to_feed ${PACKAGE}
 done < ${NEWPACKAGES}
 
-[ "x$1" == "x-v" ] && echo "Saving list of new packages..."
+[ "x$1" = "x-v" ] && echo "Saving list of new packages..."
 save_new_packages
 
-[ "x$1" == "x-v" ] && echo "Generating the final RSS page..."
+[ "x$1" = "x-v" ] && echo "Generating the final RSS page..."
 create_rss
 
-[ "x$1" == "x-v" ] && echo "Finalizing..."
+[ "x$1" = "x-v" ] && echo "Finalizing..."
 finalize
 
