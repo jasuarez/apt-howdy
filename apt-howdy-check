@@ -35,7 +35,7 @@ fi
 
 if [ "x$1" == "xunregister" ]; then
 	if [ -f ${ALARMID} ]; then
-		ID=$(<${ALARMID})
+		ID=$(cat ${ALARMID})
 		run-standalone.sh dbus-send --session --dest=com.nokia.alarmd --type=method_call /com/nokia/alarmd com.nokia.alarmd.del_event int32:${ID}
 		rm ${ALARMID}
 	fi
