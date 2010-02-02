@@ -132,7 +132,8 @@ package_to_feed ()
 		ICON_HTML=""
 	fi
 	DESC_HTML=$(text_to_html "$DESC")
-	echo "<item><title>${TITLE}</title><description>${ICON_HTML} ${DESC_HTML}</description><pubDate>$(date)</pubDate></item>\n" >> ${FEEDS}
+	CAT=$(apt-cache --no-all-versions show $1 | grep ^Section | cut -f2 -d"/")
+	echo "<item><title>${TITLE}</title><category>${CAT}</category><description>${ICON_HTML} ${DESC_HTML}</description><pubDate>$(date)</pubDate></item>\n" >> ${FEEDS}
 }
 
 # Creates (or re-creates) the RSS page
