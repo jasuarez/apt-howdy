@@ -11,7 +11,7 @@
 #define ALARMID CACHEDIR "/alarm-id"
 #define APT_HOWDY_CHECK "/usr/lib/apt-howdy-check"
 #define APT_HOWDY "/usr/lib/apt-howdy"
-#define INTERVAL 5
+#define INTERVAL 60
 
 static void
 register_alarm (void)
