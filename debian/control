@@ -6,7 +6,7 @@ Build-Depends: debhelper (>= 5)
 Standards-Version: 3.7.2
 
 Package: apt-howdy
-Architecture: all
+Architecture: any
 Depends: ${misc:Depends}, apt, busybox, dbus, hildon-initscripts
 Description: Notify new available packages
  apt-howdy is an utility that checks for new packages available in repositories

@@ -1,9 +1,12 @@
 LIB-BIN		= $(DESTDIR)/usr/lib
 
-all:
+all: apt-howdy-check
+
+apt-howdy-check: apt-howdy-check.c
+	gcc apt-howdy-check.c -o apt-howdy-check `pkg-config --cflags --libs alarm`
 
 clean:
-
+	-rm apt-howdy-check
 install:
 	install -d $(LIB-BIN)
 	install apt-howdy $(LIB-BIN)
