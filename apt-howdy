@@ -18,6 +18,8 @@
 # along with apt-howdy. If not, see <http://www.gnu.org/licenses/>.
 #
 
+set -e
+
 BASEDIR=/var/lib/apt-howdy		# Place where to put RSS page
 RSSFILE=${BASEDIR}/new-packages.xml	# RSS page to use
 
