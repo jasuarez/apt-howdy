@@ -18,7 +18,7 @@
 # along with apt-howdy. If not, see <http://www.gnu.org/licenses/>.
 #
 
-BASEDIR=/var/lib/apt-howdy		# Place where to put RSS page
+BASEDIR=/home/user/.apt-howdy		# Place where to put RSS page
 RSSFILE=${BASEDIR}/new-packages.xml	# RSS page to use
 
 CACHEDIR=${BASEDIR}/cache		# Place to put internal files
