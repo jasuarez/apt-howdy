@@ -18,16 +18,16 @@
 # along with apt-howdy. If not, see <http://www.gnu.org/licenses/>.
 #
 
-BASEDIR=/home/user/.apt-howdy		# Place where to put RSS page
-CACHEDIR=${BASEDIR}/cache		# Place to put internal files
+BASEDIR=/home/user/.apt-howdy			# Place where to put RSS page
+CACHEDIR=${BASEDIR}/cache			# Place to put internal files
 
-LASTUPDATE=${CACHEDIR}/last-apt-update	# Contains last time apt was updated
+LASTUPDATE=${CACHEDIR}/last-apt-update		# Contains last time apt was updated
 ALARMID=${CACHEDIR}/alarm-id
 
-INTERVAL=60				# Run check every INTERVAL minutes
+INTERVAL=60					# Run check every INTERVAL minutes
 
-APTHOWDY=/usr/lib/apt-howdy		# Apt-howdy full path
-APTHOWDYCHECK=/usr/lib/apt-howdy-check	# Apt-howdy-check full path
+APTHOWDY=/usr/libexec/apt-howdy			# Apt-howdy full path
+APTHOWDYCHECK=/usr/libexec/apt-howdy-check	# Apt-howdy-check full path
 
 if [ ! -d ${CACHEDIR} ]; then
 	mkdir -p ${CACHEDIR}
