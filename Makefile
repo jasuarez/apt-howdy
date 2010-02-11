@@ -1,4 +1,4 @@
-LIB-BIN		= $(DESTDIR)/usr/lib
+LIB-BIN		= $(DESTDIR)/usr/libexec
 
 all: apt-howdy-check
 

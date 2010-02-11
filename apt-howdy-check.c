@@ -9,8 +9,8 @@
 #define CACHEDIR BASEDIR "/cache"
 #define LASTUPDATE CACHEDIR "/last-apt-update"
 #define ALARMID CACHEDIR "/alarm-id"
-#define APT_HOWDY_CHECK "/usr/lib/apt-howdy-check"
-#define APT_HOWDY "/usr/lib/apt-howdy"
+#define APT_HOWDY_CHECK "/usr/libexec/apt-howdy-check"
+#define APT_HOWDY "/usr/libexec/apt-howdy"
 #define INTERVAL 60
 
 static void
