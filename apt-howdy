@@ -55,7 +55,7 @@ create_rss_header ()
 	printf "<title>%s</title>\n<link>%s</link>\n<description>%s</description>\n"	\
 		"New available packages"						\
 		"http://gitorious.org/apt-howdy"					\
-		"The list of new available packages after update" >> ${RSSHEADER}
+		"The list of new available packages after update" > ${RSSHEADER}
 }
 
 # Creates all required files
@@ -103,9 +103,8 @@ compute_new_packages ()
 # future
 save_new_packages ()
 {
-	cat ${NEWPACKAGES} >> ${OLDLIST}
-	cat ${OLDLIST} | sort > ${OLDLIST}.tmp
-	mv ${OLDLIST}.tmp ${OLDLIST}
+	cat ${OLDLIST} ${NEWPACKAGES} > ${OLDLIST}.tosort
+        cat ${OLDLIST}.tosort | sort > ${OLDLIST}
 }
 
 # Cleans up any unneeded file
@@ -113,6 +112,7 @@ finalize ()
 {
 	rm ${NEWPACKAGES}
 	rm ${NEWLIST}
+	rm ${OLDLIST}.tosort
 }
 
 # Given a package ($1) it creates a feed to notify its availability
