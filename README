@@ -1,2 +1,12 @@
 apt-howdy notifies when new packages are available for their installation.
 
+apt-howdy is a tool that helps to track new debian packages available in
+repositories. It is intended to work with environments where new packages are
+added to repositories every now and them.
+
+It creates a RSS page where it adds new packages added to repositories after
+doing an update (default is /var/lib/apt-howdy/new-packages.xml).
+
+You need to use your favourite RSS reader, point to that page, and you will be
+notified about those new packages.
+
